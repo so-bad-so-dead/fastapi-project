@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: fastapi
+      POSTGRES_PASSWORD: fastapi
+      POSTGRES_DB: fastapi
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql+psycopg2://fastapi:fastapi@db:5432/fastapi
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: change-me-in-prod
+    ports:
+      - "8000:8000"
+
+volumes:
+  db_data:
