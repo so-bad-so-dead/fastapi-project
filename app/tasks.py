@@ -19,7 +19,6 @@ def wait_for_db(retries: int = 30, delay: int = 1):
 def create_db():
     ok = wait_for_db()
     if not ok:
-        # give one last try and let the error propagate
         Base.metadata.create_all(bind=engine)
     else:
         Base.metadata.create_all(bind=engine)
